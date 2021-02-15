@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import './App.css';
 import Axios from 'axios'
+import { Pagination, Button, Row, Col } from 'react-bootstrap'
 import { pdfjs, Document, Page } from 'react-pdf';
+import pdfBook from './duckett.pdf'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 function MyApp() {
   const [translatedData, setTranslatedData] = useState('');
-  const [pageNumber, setPageNumber] = useState(12);
-  const [file, setFile] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+  // const [file, setFile] = useState(null);
 
 
   const translateFunc = () => {
@@ -26,19 +28,48 @@ function MyApp() {
     }
   }
 
+  const changePage = (pageChange) => {
+    if (pageChange === 'next') {
+      setPageNumber(pageNumber + 1)
+    } else {
+      setPageNumber(pageNumber - 2)
+    }
+  }
+
   return (
     <div>
-      <input type='file' accept='.pdf' onChange={(e) => { setFile(e.target.files[0]) }} />
-      <button onClick={translateFunc}>translate</button>
-      <div>{translatedData}</div>
-      <Document
-        file={file}
-      >
-        <Page
-          pageNumber={pageNumber}
-        >
-        </Page>
-      </Document>
+      <Row>
+        {/* <Col md={6}>
+          <label className='label_upload'>
+            Upload Book Here
+            <input className='upload_input' type='file' accept='.pdf' onChange={(e) => { setFile(e.target.files[0]) }} />
+          </label>
+        </Col> */}
+        <Col md={6}>
+          <Button variant="success" onClick={translateFunc}>translate</Button>
+        </Col>
+      </Row>
+
+      <Row className='pdf_Row'>
+        <Col md={6}>
+          <Document
+            file={pdfBook}
+          >
+            <Page
+              pageNumber={pageNumber}
+            >
+            </Page>
+          </Document>
+          {pdfBook && <Pagination>
+            <Pagination.First onClick={() => changePage('previous')} />
+            <Pagination.Last onClick={() => changePage('next')} />
+          </Pagination>}
+        </Col>
+        <Col Col md={6}>
+          <div>{translatedData}</div>
+        </Col>
+      </Row>
+
     </div>
   );
 }
