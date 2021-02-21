@@ -10,7 +10,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 function MyApp() {
   const [translatedData, setTranslatedData] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
-  // const [file, setFile] = useState(null);
+  const [file, setFile] = useState(null);
 
 
   const translateFunc = () => {
@@ -39,12 +39,12 @@ function MyApp() {
   return (
     <div>
       <Row>
-        {/* <Col md={6}>
+        <Col md={6}>
           <label className='label_upload'>
             Upload Book Here
             <input className='upload_input' type='file' accept='.pdf' onChange={(e) => { setFile(e.target.files[0]) }} />
           </label>
-        </Col> */}
+        </Col>
         <Col md={6}>
           <Button variant="success" onClick={translateFunc}>translate</Button>
         </Col>
@@ -53,7 +53,7 @@ function MyApp() {
       <Row className='pdf_Row'>
         <Col md={6}>
           <Document
-            file={pdfBook}
+            file={file ? file : pdfBook}
           >
             <Page
               pageNumber={pageNumber}
